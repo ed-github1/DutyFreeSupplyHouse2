@@ -5,5 +5,5 @@ import connectDB from './db.js'
 connectDB()
 
 
-app.listen()
+app.listen(PORT)
 console.log('Server Running on', PORT)
