@@ -1,5 +1,4 @@
 import mongoose from 'mongoose'
-import { PORT } from '../config.js'
 import { APP_HOST } from '../config.js'
 
 const productSchema = new mongoose.Schema({
@@ -14,6 +13,6 @@ const productSchema = new mongoose.Schema({
 })
 
 productSchema.methods.setImageUrl = function setImgUrl(filename) {
-  this.imgUrl = `${APP_HOST}:${PORT}/public/${filename}`
+  this.imgUrl = `${APP_HOST}/public/${filename}`
 }
 export default mongoose.model('Product', productSchema)
