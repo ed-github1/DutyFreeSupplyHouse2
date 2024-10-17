@@ -1,7 +1,8 @@
 import User from '../models/user.models.js'
 import bcrypt from 'bcryptjs'
 import { createAccessToken } from '../libs/jwt.js'
-
+import jwt from 'jsonwebtoken'
+import { SECRET } from '../config.js'
 // Register Controller
 export const register = async (req, res) => {
   const { username, email, password } = req.body
@@ -26,7 +27,6 @@ export const register = async (req, res) => {
       id: userSaved.id,
       username: userSaved.username,
       email: userSaved.email
-  
     })
   } catch (error) {
     res.status(500).json({ messsage: error.messsage })
@@ -49,7 +49,7 @@ export const login = async (req, res) => {
     res.json({
       id: userFound.id,
       username: userFound.username,
-      email: userFound.email,
+      email: userFound.email
     })
   } catch (error) {
     res.status(500).json({ messsage: error.messsage })
@@ -63,7 +63,6 @@ export const logout = (req, res) => {
   return res.sendStatus(200)
 }
 
-
 //Profile
 export const profile = async (req, res) => {
   const userFound = await User.findById(req.user.id)
@@ -74,5 +73,24 @@ export const profile = async (req, res) => {
     id: userFound.id,
     username: userFound.username,
     email: userFound.email
+  })
+}
+
+//veryfy
+
+export const verifyToken = async (req, res) => {
+  const { token } = req.cookies
+  if (!token) return res.status(401).json({ message: 'unauthorizad' })
+
+  jwt.verify(token, SECRET, async (err, user) => {
+    if (err) return res.status(401).json({ message: 'unathorized' })
+    const userFound = await user.findById(user.id)
+    if (!userFound) return res.status(401).json({ message: 'unathorized' })
+
+    return res.json({
+      id: userFound._id,
+      username: userFound.username,
+      email: userFound.email
+    })
   })
 }

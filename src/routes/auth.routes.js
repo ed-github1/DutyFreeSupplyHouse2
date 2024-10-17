@@ -5,7 +5,8 @@ import {
   register,
   login,
   logout,
-  profile
+  profile,
+  verifyToken 
 } from '../controllers/auth.controller.js'
 
 import { validateSchema } from '../middlewares/validator.middleware.js'
@@ -17,4 +18,5 @@ router.post('/register', validateSchema(registerSchema), register)
 router.post('/login', validateSchema(loginSchema), login)
 router.post('/logout', logout)
 router.get('/profile', authRequire, profile)
+router.get('/verify', verifyToken)
 export default router
